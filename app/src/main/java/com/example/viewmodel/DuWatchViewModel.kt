@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class DuWatchViewModel(application: Application) : AndroidViewModel(application) {
+class DuWatchViewModel : androidx.lifecycle.ViewModel() {
 
     private val repository = WatchRepository()
 
@@ -68,24 +68,38 @@ class DuWatchViewModel(application: Application) : AndroidViewModel(application)
     private val _nearbyDevices = MutableStateFlow<List<WatchDevice>>(emptyList())
     val nearbyDevices: StateFlow<List<WatchDevice>> = _nearbyDevices.asStateFlow()
 
+    private var appContext: Context? = null
+
+    fun attachContext(context: Context) {
+        appContext = context.applicationContext
+    }
+
     private fun getVibrator(): Vibrator? {
-        val context = getApplication<Application>()
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
-            vibratorManager?.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        val ctx = appContext ?: return null
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager = ctx.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+                vibratorManager?.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                ctx.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+            }
+        } catch (e: Throwable) {
+            null
         }
     }
 
     private fun vibrateDevice(patternMs: LongArray) {
-        val vibrator = getVibrator() ?: return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createWaveform(patternMs, -1))
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(patternMs, -1)
+        try {
+            val vibrator = getVibrator() ?: return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(patternMs, -1))
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(patternMs, -1)
+            }
+        } catch (e: Throwable) {
+            // Safe fallback if vibrator is disabled or restricted
         }
     }
 

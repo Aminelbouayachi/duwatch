@@ -42,12 +42,14 @@ fun MyApplicationTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as? Activity)?.window
-            window?.let {
-                it.statusBarColor = BackgroundDark.toArgb()
-                it.navigationBarColor = BackgroundDark.toArgb()
-                WindowCompat.getInsetsController(it, view).isAppearanceLightStatusBars = false
-                WindowCompat.getInsetsController(it, view).isAppearanceLightNavigationBars = false
+            try {
+                val window = (view.context as? Activity)?.window
+                window?.let {
+                    WindowCompat.getInsetsController(it, view).isAppearanceLightStatusBars = false
+                    WindowCompat.getInsetsController(it, view).isAppearanceLightNavigationBars = false
+                }
+            } catch (e: Throwable) {
+                // Safe ignore if insets controller is unavailable in current context
             }
         }
     }

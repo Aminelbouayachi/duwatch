@@ -57,6 +57,11 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DuWatchApp(viewModel: DuWatchViewModel = viewModel()) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    LaunchedEffect(context) {
+        viewModel.attachContext(context)
+    }
+
     var currentTab by remember { mutableStateOf(NavigationTab.DASHBOARD) }
     val device by viewModel.device.collectAsState()
     val syncState by viewModel.syncState.collectAsState()
