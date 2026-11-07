@@ -1,0 +1,6 @@
+{
+  "name": "DuWatch",
+  "description": "Smartwatch companion app with customizable watch faces, alarms, telemetry sync, and watch features control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
