@@ -1,5 +1,13 @@
 # DuWatch Pro ⌚
 
+[![Download APK](https://img.shields.io/badge/Download_Fixed_APK-DuWatch__Pro.apk-00E5FF?style=for-the-badge&logo=android&logoColor=black)](https://github.com/Aminelbouayachi/duwatch/releases/download/latest/DuWatch-Pro.apk)
+[![Android Build](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/Aminelbouayachi/duwatch/actions)
+[![Compatibility](https://img.shields.io/badge/Android-7.0_to_15_(API_24--35)-blue?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Aminelbouayachi/duwatch)
+
+> **✅ Status: Bug Fixed & Verified (v1.0.1)**  
+> The Samsung One UI / Android 14+ startup crash has been resolved. You can download and install the fixed APK directly using the button above or from the [Latest Releases](https://github.com/Aminelbouayachi/duwatch/releases/latest).
+
+---
 **DuWatch Pro** is a modern Android companion application built with **Jetpack Compose** and **Material Design 3** for smartwatches and fitness trackers. It provides complete customization of watch faces, alarms, vitals monitoring, remote camera control, and smartwatch hardware settings.
 
 ---
