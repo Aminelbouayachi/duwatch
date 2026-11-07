@@ -7,6 +7,9 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build DuWatch Debug APK
@@ -44,9 +47,40 @@ jobs:
       - name: Build Debug APK with Gradle
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
+      - name: Prepare Release APK Artifact
+        run: |
+          mkdir -p .build-outputs
+          cp app/build/outputs/apk/debug/app-debug.apk .build-outputs/app-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk DuWatch-Pro.apk
+
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DuWatch-Debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: latest
+          name: "DuWatch Pro (Fixed APK)"
+          body: |
+            ## ⌚ DuWatch Pro - Smartwatch Companion App
+            
+            ### 🛠️ Bugs Fixed in this Release:
+            - **Fixed Startup Crash on Samsung One UI & Android 14/15**:
+              - Fixed `SimpleDateFormat("MON 07")` pattern syntax exception in `WatchFaceCanvas.kt` that was crashing `DashboardScreen` immediately on first render.
+              - Repaired invalid `<color>` tag in `res/drawable/ic_launcher_background.xml` by replacing it with a valid `<shape>` element so launcher adaptive icons load cleanly without XML parser exceptions.
+              - Replaced `Theme.DeviceDefault` with stable `android:Theme.Material.NoActionBar` in `themes.xml`.
+              - Protected hex color parsing in `WatchFaceStudioModal.kt`.
+              - Added safe fallback wrappers around window insets in `MainActivity.kt`.
+            
+            ### 📥 Download APK
+            Tap **`DuWatch-Pro.apk`** below to install directly on your Android phone.
+          files: |
+            DuWatch-Pro.apk
+            app/build/outputs/apk/debug/app-debug.apk
+          draft: false
+          prerelease: false

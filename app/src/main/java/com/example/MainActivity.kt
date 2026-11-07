@@ -9,7 +9,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -45,7 +44,11 @@ enum class NavigationTab(val title: String, val icon: ImageVector, val tag: Stri
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        try {
+            enableEdgeToEdge()
+        } catch (t: Throwable) {
+            // Safe fallback for custom OEM window decorators
+        }
         setContent {
             MyApplicationTheme {
                 DuWatchApp()
@@ -59,7 +62,11 @@ class MainActivity : ComponentActivity() {
 fun DuWatchApp(viewModel: DuWatchViewModel = viewModel()) {
     val context = androidx.compose.ui.platform.LocalContext.current
     LaunchedEffect(context) {
-        viewModel.attachContext(context)
+        try {
+            viewModel.attachContext(context)
+        } catch (t: Throwable) {
+            // Ignore context attachment issues
+        }
     }
 
     var currentTab by remember { mutableStateOf(NavigationTab.DASHBOARD) }

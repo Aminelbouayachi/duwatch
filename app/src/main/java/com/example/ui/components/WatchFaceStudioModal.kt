@@ -237,8 +237,8 @@ fun WatchFaceStudioModal(
                                         .background(
                                             androidx.compose.ui.graphics.Brush.linearGradient(
                                                 listOf(
-                                                    Color(android.graphics.Color.parseColor(start)),
-                                                    Color(android.graphics.Color.parseColor(end))
+                                                    try { Color(android.graphics.Color.parseColor(start)) } catch (e: Exception) { NeonCyan },
+                                                    try { Color(android.graphics.Color.parseColor(end)) } catch (e: Exception) { NeonPurple }
                                                 )
                                             )
                                         )
@@ -281,7 +281,7 @@ fun WatchFaceStudioModal(
                         ) {
                             colorChoices.forEach { hex ->
                                 val isSelected = draft.timeColorHex.equals(hex, ignoreCase = true)
-                                val col = Color(android.graphics.Color.parseColor(hex))
+                                val col = try { Color(android.graphics.Color.parseColor(hex)) } catch (e: Exception) { NeonCyan }
                                 Box(
                                     modifier = Modifier
                                         .size(38.dp)

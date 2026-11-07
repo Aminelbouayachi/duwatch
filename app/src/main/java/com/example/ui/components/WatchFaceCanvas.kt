@@ -135,9 +135,16 @@ fun WatchFaceContent(
     // Current simulated live time
     val currentTime = remember {
         val cal = Calendar.getInstance()
-        val sdfTime = SimpleDateFormat("10:42", Locale.getDefault())
-        val sdfDate = SimpleDateFormat("MON 07", Locale.getDefault())
-        Pair(timeText ?: sdfTime.format(cal.time), dateText ?: sdfDate.format(cal.time))
+        try {
+            val sdfTime = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val sdfDate = SimpleDateFormat("EEE dd", Locale.getDefault())
+            Pair(
+                timeText ?: sdfTime.format(cal.time),
+                dateText ?: sdfDate.format(cal.time).uppercase(Locale.getDefault())
+            )
+        } catch (e: Throwable) {
+            Pair(timeText ?: "10:42", dateText ?: "MON 07")
+        }
     }
 
     val parsedTimeColor = remember(watchFace.timeColorHex) {
